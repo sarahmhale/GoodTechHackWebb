@@ -5,6 +5,8 @@ import {
   GoogleMap,
   Marker,
 } from "react-google-maps";
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 //Hardcoded data
 const markers = [{
@@ -37,8 +39,9 @@ const MapWithAMarker = withScriptjs(withGoogleMap(props =>
     defaultZoom={20}
     defaultCenter={{ lat: 62.392782, lng: 17.283503}}
   >
-    {markers.map(marker => (
+    {props.markers.map(marker => (
       <Marker
+        key={marker.id}
         position={{ lat: marker.latitude, lng: marker.longitude }}
       />
     ))}
@@ -47,7 +50,7 @@ const MapWithAMarker = withScriptjs(withGoogleMap(props =>
 ));
 
 
-export default class Map extends React.Component {
+class Map extends React.Component {
   state = {
     isMarkerShown: false,
   }
@@ -68,11 +71,12 @@ export default class Map extends React.Component {
   }
 
   render() {
+    console.log(this.props.data.allPersons)
     return (
       <MapWithAMarker
+        markers={this.props.data.allPersons ? this.props.data.allPersons : []}
         googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
-        loadingElement={<div style={{ height: `100%` }} />
-        }
+        loadingElement={<div style={{ height: `100%` }} /> }
         containerElement = {
           <div style={{position: 'absolute',
                         top: 0,
@@ -89,7 +93,23 @@ export default class Map extends React.Component {
                         right: 0,
           bottom: 0, }} />
         }
-    />
-  )
+      />
+    )
+  }
 }
-}
+
+
+// here we create a query opearation
+const MY_QUERY = gql`
+  query {
+    allPersons {
+      id
+      longitude
+      latitude
+    }
+  }
+`;
+
+// We then can use the graphql container to pass the query results returned by MY_QUERY
+// to a component as a prop (and update them as the results change)
+export default graphql(MY_QUERY)(Map);
