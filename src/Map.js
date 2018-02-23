@@ -9,23 +9,23 @@ import {
 //Hardcoded data
 const markers = [{
     id: '1',
-    latitude: -34.397,
-    longitude: 150.644,
+    latitude:  62.392791,
+    longitude: 17.283503,
     createdAt: '00:00',
     updatedAt: '00:00'
   },
   {
     id: '2',
-    latitude: -34.400,
-    longitude: 150.644,
+    latitude:  62.392782,
+    longitude: 17.283502,
     createdAt: '00:00',
     updatedAt: '00:00'
 
   },
   {
     id: '3',
-    latitude: -34.397,
-    longitude: 150.650,
+    latitude:  62.392784,
+    longitude: 17.283503,
     createdAt: '00:00',
     updatedAt: '00:00'
 
@@ -34,8 +34,8 @@ const markers = [{
 
 const MapWithAMarker = withScriptjs(withGoogleMap(props =>
   <GoogleMap
-    defaultZoom={15}
-    defaultCenter={{ lat: -34.397, lng: 150.644 }}
+    defaultZoom={20}
+    defaultCenter={{ lat: 62.392782, lng: 17.283503}}
   >
     {markers.map(marker => (
       <Marker
