@@ -39,21 +39,51 @@ const MapWithAMarker = withScriptjs(withGoogleMap(props =>
     defaultZoom={20}
     defaultCenter={{ lat: 62.392782, lng: 17.283503}}
   >
-    {props.markers.map(marker => (
-      <Marker
-        key={marker.id}
-        position={{ lat: marker.latitude, lng: marker.longitude }}
-      />
-    ))}
+    {props.markers.map(marker => {
+      if(marker)
+        return (
+          <Marker
+            key={marker.id}
+            position={{ lat: marker.latitude, lng: marker.longitude }}
+          />
+        )
+    })}
 
   </GoogleMap>
 ));
+
+
+// console.log(prev)
+// console.log(subscriptionData)
+// if (!subscriptionData) {
+//   return prev;
+// }
+// const { node } = subscriptionData.data.Person
+// if(!node){
+//   return {
+//     ...prev,
+//     allPersons: [...prev.allPersons],
+//   }
+// }
+// return {
+//   ...prev,
+//   allPersons: [...prev.allPersons, node],
+// }
 
 
 class Map extends React.Component {
   state = {
     isMarkerShown: false,
   }
+
+  componentWillMount() {
+    this.props.data.subscribeToMore({
+      document: PERSON_SUBSCRIPTION,
+      updateQuery: (prev, props) => {
+        this.props.data.refetch()
+      }
+    })
+}
 
   componentDidMount() {
     this.delayedShowMarker()
@@ -71,7 +101,7 @@ class Map extends React.Component {
   }
 
   render() {
-    console.log(this.props.data.allPersons)
+    console.log(this.props)
     return (
       <MapWithAMarker
         markers={this.props.data.allPersons ? this.props.data.allPersons : []}
@@ -99,8 +129,8 @@ class Map extends React.Component {
 }
 
 
-// here we create a query opearation
-const MY_QUERY = gql`
+
+const PERSON_QUERY = gql`
   query {
     allPersons {
       id
@@ -110,6 +140,17 @@ const MY_QUERY = gql`
   }
 `;
 
-// We then can use the graphql container to pass the query results returned by MY_QUERY
-// to a component as a prop (and update them as the results change)
-export default graphql(MY_QUERY)(Map);
+const PERSON_SUBSCRIPTION = gql`
+  subscription {
+    Person {
+      node {
+        id
+        longitude
+        latitude
+      }
+    }
+  }
+`
+
+
+export default graphql(PERSON_QUERY)(Map);
