@@ -103,6 +103,7 @@ class Map extends React.Component {
   render() {
     console.log(this.props)
     return (
+      <div>
       <MapWithAMarker
         markers={this.props.data.allPersons ? this.props.data.allPersons : []}
         googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
@@ -124,6 +125,25 @@ class Map extends React.Component {
           bottom: 0, }} />
         }
       />
+      <div style={{position: 'absolute',
+                    bottom:40,
+                    left:40,
+                    width:75,
+                    height:75,
+                    borderRadius:50,
+                    borderWidth:1,
+                    borderStyle:'solid',
+                    borderColor:"#888888",
+                    backgroundColor:"#ffffff",
+                    zIndex: 99}}>
+                    <p style={{
+                      marginLeft:10,
+                      marginTop:8,
+                      fontSize:50,
+                      fontFamily: 'Roboto'
+                    }}>{this.props.data.allPersons?this.props.data.allPersons.length:0}</p>
+                    </div>
+      </div>
     )
   }
 }
